@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toy Dəvətnaməsi - Günay & Ayxan</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Great Vibes", cursive, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at bottom, #000022, #000);
+      color: #fff;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      text-align: center;
+      width: 480px;
+      margin: 80px auto;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+      animation: fadeIn 2.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #ffbfd6;
+      text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493;
+      animation: glow 3s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff69b4; }
+      to { text-shadow: 0 0 30px #ff1493, 0 0 50px #ff007f; }
+    }
+
+    h2 {
+      font-family: "Poppins", sans-serif;
+      color: #ffe3ec;
+      margin-bottom: 25px;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #f5f5f5;
+    }
+
+    .details {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .emoji {
+      font-size: 22px;
+      margin-top: 15px;
+    }
+
+    .signature {
+      margin-top: 25px;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    .signature img {
+      width: 200px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworks"></canvas>
+
+  <div class="card">
+    <h1>💍 TOY DƏVƏTNAMƏSİ 💍</h1>
+    <h2>GÜNAY & AYXAN</h2>
+    <p>Əziz dostlar və yaxınlar!<br>
+    Sizi ömrümüzün ən gözəl günündə — sevgimizin rəsmi başlanğıcına şahid olmağa dəvət edirik.</p>
+
+    <div class="details">
+      <p>📅 <strong>Tarix:</strong> 25 Noyabr 2025</p>
+      <p>⏰ <strong>Saat:</strong> 18:00</p>
+      <p>📍 <strong>Ünvan:</strong> Bakı şəhəri, Xətai rayonu, N. Tusi küçəsi 11</p>
+    </div>
+
+    <p class="emoji">🎆 Sizin iştirakınız bu günümüzü daha da möhtəşəm edəcək 🎇</p>
+
+    <!-- İMZA BURADA -->
+    <div class="signature">
+      <img src="images/995371ff-1942-4288-81b1-cdefa1aa3f7a.png" alt="">
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+
+    const fireworks = [];
+    const particles = [];
+
+    class Firework {
+      constructor(x, y, targetY) {
+        this.x = x;
+        this.y = y;
+        this.targetY = targetY;
+        this.speed = 3;
+        this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        this.done = false;
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y <= this.targetY) {
+          this.explode();
+          this.done = true;
+        }
+      }
+
+      explode() {
+        for (let i = 0; i < 50; i++) {
+          particles.push(new Particle(this.x, this.y, this.color));
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.speedX = (Math.random() - 0.5) * 6;
+        this.speedY = (Math.random() - 0.5) * 6;
+        this.alpha = 1;
+        this.gravity = 0.05;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY + this.gravity;
+        this.alpha -= 0.02;
+      }
+
+      draw() {
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (Math.random() < 0.05) {
+        fireworks.push(new Firework(
+          Math.random() * canvas.width,
+          canvas.height,
+          Math.random() * canvas.height / 2
+        ));
+      }
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].update();
+        fireworks[i].draw();
+        if (fireworks[i].done) fireworks.splice(i, 1);
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    });
+  </script>
+</body>
+</html>
